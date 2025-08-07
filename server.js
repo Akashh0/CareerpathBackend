@@ -1,14 +1,20 @@
 const express = require('express');
 const cors = require('cors');
+const bodyParser = require('body-parser');
+const path = require('path');
+const roadmapRoute = require('./routes/roadmap');
+
 const app = express();
-
-const roadmapRoute = require('./routes/roadmap'); // 👈 Import route
-
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// Use the route
-app.use('/api', roadmapRoute); // Your frontend will call: /api/generate-roadmap
+// ✅ Add this line to serve PDFs
+app.use('/media', express.static(path.join(__dirname, 'roadmaps')));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Use your roadmap route
+app.use('/api', roadmapRoute);
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Express server running on port ${PORT}`);
+});
