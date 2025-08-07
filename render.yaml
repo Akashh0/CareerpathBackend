@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: career-flask-api
+    env: python
+    buildCommand: ""
+    startCommand: python model_api.py
+    envVars:
+      - key: OPENROUTER_API_KEY
+        value: your_actual_key_here
+    plan: free
+
+  - type: web
+    name: career-express-api
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+    plan: free
