@@ -4,7 +4,7 @@ from Model import generate_recommendation_from_input  # Your existing logic
 import traceback
 
 app = Flask(__name__)
-CORS(app)  # Allows requests from Express/React
+CORS(app, origins=["https://career-path-recommender-orpin.vercel.app"])  # Allows requests from Express/React
 
 @app.route('/api/generate-roadmap', methods=['POST'])
 def generate_roadmap():
@@ -27,5 +27,5 @@ def generate_roadmap():
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=10000)
 
