@@ -2,8 +2,8 @@ services:
   - type: web
     name: career-flask-api
     env: python
-    buildCommand: ""
-    startCommand: python model_api.py
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn model_api:app --bind 0.0.0.0:$PORT
     envVars:
       - key: OPENROUTER_API_KEY
         value: your_actual_key_here

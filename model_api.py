@@ -1,31 +1,26 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from Model import generate_recommendation_from_input  # Your existing logic
+from Model import generate_recommendation_from_input
 import traceback
 
 app = Flask(__name__)
-CORS(app, origins=["https://career-path-recommender-orpin.vercel.app"])  # Allows requests from Express/React
+CORS(app, origins=["https://career-path-recommender-orpin.vercel.app"])
 
 @app.route('/api/generate-roadmap', methods=['POST'])
 def generate_roadmap():
     try:
-        data = request.json
-        interest = data.get('interest')
-        qualification = data.get('qualification')
-
-        if not interest or not qualification:
-            return jsonify({"error": "Missing 'interest' or 'qualification' in request"}), 400
-
-        result = generate_recommendation_from_input(interest, qualification)
-        return jsonify(result), 200
-
+        data = request.get_json()
+        user_interest = data.get("interest")
+        user_qualification = data.get("qualification")
+        response = generate_recommendation_from_input(user_interest, user_qualification)
+        return jsonify(response)
     except Exception as e:
-        print("❌ API Error:", e)
-        traceback.print_exc()
-        return jsonify({"error": "Something went wrong. Try again later."}), 500
+        print("ERROR:", traceback.format_exc())
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/', methods=['GET'])
+def health():
+    return "Backend running!", 200
 
 if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=10000)
-
+    app.run(host='0.0.0.0', port=8080)

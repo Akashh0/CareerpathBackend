@@ -1,8 +1,8 @@
-flask
+Flask
 flask-cors
-pandas
-requests
-graphviz
-python-dotenv
+gunicorn
 sentence-transformers
 scikit-learn
+pandas
+graphviz
+python-dotenv
