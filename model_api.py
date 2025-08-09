@@ -4,7 +4,7 @@ from Model import generate_recommendation_from_input
 import traceback
 
 app = Flask(__name__)
-CORS(app, origins=["https://career-path-recommender-orpin.vercel.app"])
+CORS(app, resources={r"/*": {"origins": "https://career-path-recommender-orpin.vercel.app"}})
 
 @app.route('/api/generate-roadmap', methods=['POST'])
 def generate_roadmap():
