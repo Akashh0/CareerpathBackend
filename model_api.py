@@ -4,7 +4,7 @@ from Model import generate_recommendation_from_input
 import traceback
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://career-path-recommender-orpin.vercel.app"}})
+CORS(app)
 
 @app.route('/api/generate-roadmap', methods=['POST'])
 def generate_roadmap():
@@ -23,4 +23,4 @@ def health():
     return "Backend running!", 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=5000)
