@@ -1,31 +1,40 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
-const roadmapRoute = require('./routes/roadmap');
+const axios = require('axios');
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ Allow external CSS (e.g., antd) + local media
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net;"
-  );
-  next();
+// ✅ Serve roadmap PDFs from roadmaps folder
+const roadmapsPath = path.join(__dirname, 'roadmaps');
+app.use('/roadmaps', express.static(roadmapsPath)); // fixed route
+
+// ✅ Proxy route to Python backend (Flask)
+app.post('/api/generate-roadmap', async (req, res) => {
+  try {
+    const flaskRes = await axios.post(
+      'http://localhost:5000/api/generate-roadmap',
+      req.body,
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+    res.json(flaskRes.data);
+  } catch (err) {
+    console.error('❌ Proxy error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch roadmap from Python backend.' });
+  }
 });
 
-// ✅ Shared roadmaps folder at project root
-const roadmapsPath = path.join(__dirname, '..', 'roadmaps');
-app.use('/media', express.static(roadmapsPath));
-
-// Routes
-app.use('/api', roadmapRoute);
+// ✅ Health check
+app.get('/', (req, res) => {
+  res.send('Express backend running ✅');
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(` Express server running on port ${PORT}`);
-  console.log(` Serving PDFs from: ${roadmapsPath}`);
+  console.log(`🚀 Express server running on port ${PORT}`);
+  console.log(`📄 Serving PDFs from: ${roadmapsPath}`);
 });

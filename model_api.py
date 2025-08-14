@@ -1,3 +1,4 @@
+# model_api.py
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from Model import generate_recommendation_from_input
@@ -20,7 +21,7 @@ def generate_roadmap():
 
 @app.route('/', methods=['GET'])
 def health():
-    return "Backend running!", 200
+    return "Flask backend running ✅", 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
